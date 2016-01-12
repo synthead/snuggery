@@ -4,7 +4,7 @@
 namespace WebServer {
   void setup();
   void handle_client();
-  void hello_world();
+  void temperature();
 }
 
 #endif
