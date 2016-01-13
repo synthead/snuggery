@@ -7,7 +7,7 @@ namespace WebServer {
   ESP8266WebServer server(80);
 
   void setup() {
-    server.on("/", temperature);
+    server.on("/", index);
     server.begin();
   }
 
@@ -15,12 +15,22 @@ namespace WebServer {
     server.handleClient();
   }
 
-  void temperature() {
-    char temperature[6];
+  void index() {
+    char html[1000];
     sprintf(
-        temperature, "Temperature: %d.%02d",
-        DS18B20::temperature / 100, DS18B20::temperature % 100);
+        html,
+        R"(
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <title>Snuggery</title>
+              </head>
+              <body>Temperature: %d.%02d</body>
+            </html>
+        )",
+        DS18B20::temperature / 100,
+        DS18B20::temperature % 100);
 
-    server.send(200, "text/plain", temperature);
+    server.send(200, "text/html", html);
   }
 }
