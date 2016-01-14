@@ -41,11 +41,11 @@ namespace WebServer {
               <body>
                 <table>
                   <tr>
-                    <td>Desired temperature:</td>
+                    <td>Thermostat temperature:</td>
                     <td>%s</td>
                   </tr>
                   <tr>
-                    <td>Current temperature:</td>
+                    <td>Sensor temperature:</td>
                     <td>%s</td>
                   </tr>
                   <tr>
