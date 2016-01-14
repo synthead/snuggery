@@ -2,7 +2,6 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-#define DS18B20_BYTES 9
 #define DS18B20_PIN 0
 #define UPDATE_TEMPERATURE_CYCLES 5000000
 
