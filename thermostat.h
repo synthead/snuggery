@@ -3,6 +3,7 @@
 
 namespace Thermostat {
   extern float temperature;
+  extern bool enabled;
 }
 
 #endif

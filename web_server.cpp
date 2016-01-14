@@ -48,12 +48,17 @@ namespace WebServer {
                     <td>Current temperature:</td>
                     <td>%s</td>
                   </tr>
+                  <tr>
+                    <td>Thermostat enabled:</td>
+                    <td>%s</td>
+                  </tr>
                 </table>
               </body>
             </html>
         )",
         &thermostat_temperature,
-        &sensor_temperature);
+        &sensor_temperature,
+        Thermostat::enabled ? "True" : "False");
 
     server.send(200, "text/html", html);
   }
@@ -61,6 +66,10 @@ namespace WebServer {
   void submit() {
     if (server.hasArg("thermostat_temperature")) {
       Thermostat::temperature = server.arg("thermostat_temperature").toFloat();
+    }
+
+    if (server.hasArg("enabled")) {
+      Thermostat::enabled = server.arg("enabled").toInt();
     }
 
     server.send(200, "text/plain", "Submitted.");
