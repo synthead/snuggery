@@ -28,8 +28,8 @@ namespace WebServer {
               <body>Temperature: %d.%02d</body>
             </html>
         )",
-        TemperatureSensor::temperature / 100,
-        TemperatureSensor::temperature % 100);
+        (int)TemperatureSensor::temperature,
+        (int)(TemperatureSensor::temperature * 100) % 100);
 
     server.send(200, "text/html", html);
   }

@@ -6,7 +6,7 @@
 #define UPDATE_TEMPERATURE_CYCLES 5000000
 
 namespace TemperatureSensor {
-  int temperature;
+  float temperature;
   int tick = UPDATE_TEMPERATURE_CYCLES;
 
   OneWire one_wire(DS18B20_PIN);
@@ -18,7 +18,7 @@ namespace TemperatureSensor {
 
   void update() {
     sensors.requestTemperatures();
-    temperature = sensors.getTempCByIndex(0) * 100;
+    temperature = sensors.getTempCByIndex(0);
   }
 
   void update_occasionally() {
