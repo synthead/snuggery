@@ -7,8 +7,10 @@
  
 void setup() {
   WiFi.begin(WIFI_SETTINGS_ESSID, WIFI_SETTINGS_PASSWORD);
-  WebServer::setup();
+
+  Thermostat::setup();
   TemperatureSensor::setup();
+  WebServer::setup();
 }
  
 void loop() {

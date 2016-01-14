@@ -6,6 +6,8 @@ namespace Thermostat {
   extern bool enabled;
   extern bool heat_on;
 
+  void setup();
+  void set_heat(bool);
   void update();
 }
 
