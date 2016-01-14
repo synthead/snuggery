@@ -7,8 +7,8 @@
 namespace WebServer {
   ESP8266WebServer server(80);
   char html[1000];
-  char desired_temperature[7];
-  char current_temperature[7];
+  char thermostat_temperature[7];
+  char sensor_temperature[7];
 
   void setup() {
     server.on("/", index);
@@ -27,8 +27,8 @@ namespace WebServer {
   }
 
   void index() {
-    float_to_char(desired_temperature, Thermostat::temperature);
-    float_to_char(current_temperature, TemperatureSensor::temperature);
+    float_to_char(thermostat_temperature, Thermostat::temperature);
+    float_to_char(sensor_temperature, TemperatureSensor::temperature);
 
     sprintf(
         html,
@@ -52,15 +52,15 @@ namespace WebServer {
               </body>
             </html>
         )",
-        &desired_temperature,
-        &current_temperature);
+        &thermostat_temperature,
+        &sensor_temperature);
 
     server.send(200, "text/html", html);
   }
 
   void submit() {
-    if (server.hasArg("temperature")) {
-      Thermostat::temperature = server.arg("temperature").toFloat();
+    if (server.hasArg("thermostat_temperature")) {
+      Thermostat::temperature = server.arg("thermostat_temperature").toFloat();
       server.send(200, "text/plain", "Submitted.");
     }
   }
