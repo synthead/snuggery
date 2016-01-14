@@ -6,4 +6,5 @@
 namespace Thermostat {
   float temperature = INITIAL_TEMPERATURE;
   bool enabled = INITIAL_ENABLED;
+  bool heat_on = INITIAL_ENABLED;
 }

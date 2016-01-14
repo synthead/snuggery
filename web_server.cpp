@@ -9,6 +9,8 @@ namespace WebServer {
   char html[1000];
   char thermostat_temperature[7];
   char sensor_temperature[7];
+  char thermostat_enabled[6];
+  char heat_on[6];
 
   void setup() {
     server.on("/", index);
@@ -26,9 +28,15 @@ namespace WebServer {
         (int)(float_value * 100) % 100);
   }
 
+  char* bool_to_char(char* char_value, float bool_value) {
+    sprintf(char_value, "%s", bool_value ? "True" : "False");
+  }
+
   void index() {
     float_to_char(thermostat_temperature, Thermostat::temperature);
     float_to_char(sensor_temperature, TemperatureSensor::temperature);
+    bool_to_char(thermostat_enabled, Thermostat::enabled);
+    bool_to_char(heat_on, Thermostat::heat_on);
 
     sprintf(
         html,
@@ -52,13 +60,18 @@ namespace WebServer {
                     <td>Thermostat enabled:</td>
                     <td>%s</td>
                   </tr>
+                  <tr>
+                    <td>Heat on:</td>
+                    <td>%s</td>
+                  </tr>
                 </table>
               </body>
             </html>
         )",
         &thermostat_temperature,
         &sensor_temperature,
-        Thermostat::enabled ? "True" : "False");
+        &thermostat_enabled,
+        &heat_on);
 
     server.send(200, "text/html", html);
   }

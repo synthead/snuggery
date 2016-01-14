@@ -4,6 +4,7 @@
 namespace Thermostat {
   extern float temperature;
   extern bool enabled;
+  extern bool heat_on;
 }
 
 #endif
