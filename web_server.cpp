@@ -85,6 +85,7 @@ namespace WebServer {
       Thermostat::enabled = server.arg("enabled").toInt();
     }
 
+    Thermostat::update();
     server.send(200, "text/plain", "Submitted.");
   }
 }

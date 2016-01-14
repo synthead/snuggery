@@ -1,4 +1,5 @@
 #include "temperature_sensor.h"
+#include "thermostat.h"
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
@@ -19,6 +20,7 @@ namespace TemperatureSensor {
   void update() {
     sensors.requestTemperatures();
     temperature = sensors.getTempCByIndex(0);
+    Thermostat::update();
   }
 
   void update_occasionally() {
