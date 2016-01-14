@@ -61,7 +61,8 @@ namespace WebServer {
   void submit() {
     if (server.hasArg("thermostat_temperature")) {
       Thermostat::temperature = server.arg("thermostat_temperature").toFloat();
-      server.send(200, "text/plain", "Submitted.");
     }
+
+    server.send(200, "text/plain", "Submitted.");
   }
 }
