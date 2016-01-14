@@ -5,6 +5,7 @@ namespace WebServer {
   void setup();
   void handle_client();
   void index();
+  void submit();
 }
 
 #endif

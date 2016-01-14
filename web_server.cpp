@@ -12,6 +12,7 @@ namespace WebServer {
 
   void setup() {
     server.on("/", index);
+    server.on("/submit", submit);
     server.begin();
   }
 
@@ -55,5 +56,12 @@ namespace WebServer {
         &current_temperature);
 
     server.send(200, "text/html", html);
+  }
+
+  void submit() {
+    if (server.hasArg("temperature")) {
+      Thermostat::temperature = server.arg("temperature").toFloat();
+      server.send(200, "text/plain", "Submitted.");
+    }
   }
 }
