@@ -12,5 +12,5 @@ void setup() {
  
 void loop() {
   WebServer::handle_client();
-  TemperatureSensor::read();
+  TemperatureSensor::update_occasionally();
 }

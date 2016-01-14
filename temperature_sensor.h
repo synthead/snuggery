@@ -5,7 +5,8 @@ namespace TemperatureSensor {
   extern int temperature;
 
   void setup();
-  void read();
+  void update();
+  void update_occasionally();
 }
 
 #endif
