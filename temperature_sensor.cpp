@@ -1,11 +1,11 @@
-#include "ds18b20.h"
+#include "temperature_sensor.h"
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
 #define DS18B20_BYTES 9
 #define DS18B20_PIN 0
 
-namespace DS18B20 {
+namespace TemperatureSensor {
   int temperature;
 
   OneWire one_wire(DS18B20_PIN);

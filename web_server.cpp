@@ -1,5 +1,5 @@
 #include "web_server.h"
-#include "ds18b20.h"
+#include "temperature_sensor.h"
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 
@@ -28,8 +28,8 @@ namespace WebServer {
               <body>Temperature: %d.%02d</body>
             </html>
         )",
-        DS18B20::temperature / 100,
-        DS18B20::temperature % 100);
+        TemperatureSensor::temperature / 100,
+        TemperatureSensor::temperature % 100);
 
     server.send(200, "text/html", html);
   }
