@@ -6,7 +6,7 @@
 
 namespace WebServer {
   ESP8266WebServer server(80);
-  char html[1000];
+  char response[1000];
   char thermostat_temperature[7];
   char sensor_temperature[7];
   char thermostat_enabled[6];
@@ -39,7 +39,7 @@ namespace WebServer {
     bool_to_char(heat_on, Thermostat::heat_on);
 
     sprintf(
-        html,
+        response,
         R"(
             <!DOCTYPE html>
             <html>
@@ -73,7 +73,7 @@ namespace WebServer {
         &thermostat_enabled,
         &heat_on);
 
-    server.send(200, "text/html", html);
+    server.send(200, "text/html", response);
   }
 
   void submit() {
