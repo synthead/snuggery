@@ -2,7 +2,9 @@
 #include "temperature_sensor.h"
 #include <Arduino.h>
 
-#define MOSFET_PIN 0
+#define MOSFET_PIN 16
+#define HEAT_ON_LED_PIN 0
+
 #define INITIAL_TEMPERATURE 19.0
 #define INITIAL_ENABLED false
 #define TEMPERATURE_DEVIATION 0.15
@@ -14,11 +16,14 @@ namespace Thermostat {
 
   void setup() {
     pinMode(MOSFET_PIN, OUTPUT);
+    pinMode(HEAT_ON_LED_PIN, OUTPUT);
+
     set_heat(false);
   }
 
   void set_heat(bool is_on) {
-    digitalWrite(MOSFET_PIN, ! is_on);
+    digitalWrite(MOSFET_PIN, is_on);
+    digitalWrite(HEAT_ON_LED_PIN, ! is_on);
     heat_on = is_on;
   }
 
