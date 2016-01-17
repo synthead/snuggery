@@ -6,11 +6,6 @@
 
 namespace WebServer {
   ESP8266WebServer server(80);
-  char response[1000];
-  char thermostat_temperature[7];
-  char sensor_temperature[7];
-  char thermostat_enabled[6];
-  char heat_on[6];
 
   void setup() {
     server.on("/", index);
@@ -22,70 +17,118 @@ namespace WebServer {
     server.handleClient();
   }
 
-  char* float_to_char(char* char_value, float float_value) {
+  String float_to_string(float float_value) {
+    char char_value[7];
     sprintf(
         char_value, "%d.%02d", (int)float_value,
         (int)(float_value * 100) % 100);
+
+    return String(char_value);
   }
 
-  char* bool_to_char(char* char_value, float bool_value) {
-    sprintf(char_value, "%s", bool_value ? "True" : "False");
+  String bool_to_string(float bool_value) {
+    return String(bool_value ? "True" : "False");
   }
 
   void index() {
-    float_to_char(thermostat_temperature, Thermostat::temperature);
-    float_to_char(sensor_temperature, TemperatureSensor::temperature);
-    bool_to_char(thermostat_enabled, Thermostat::enabled);
-    bool_to_char(heat_on, Thermostat::heat_on);
-
-    sprintf(
-        response,
-        R"(
-            <!DOCTYPE html>
-            <html>
-              <head>
-                <title>Snuggery</title>
-              </head>
-              <body>
-                <table>
-                  <tr>
-                    <td>Thermostat temperature:</td>
-                    <td>%s</td>
-                  </tr>
-                  <tr>
-                    <td>Sensor temperature:</td>
-                    <td>%s</td>
-                  </tr>
-                  <tr>
-                    <td>Thermostat enabled:</td>
-                    <td>%s</td>
-                  </tr>
-                  <tr>
-                    <td>Heat on:</td>
-                    <td>%s</td>
-                  </tr>
-                </table>
-              </body>
-            </html>
-        )",
-        &thermostat_temperature,
-        &sensor_temperature,
-        &thermostat_enabled,
-        &heat_on);
-
-    server.send(200, "text/html", response);
+    server.send(200, "text/html", String(R"(
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Snuggery</title>
+          </head>
+          <body>
+            <table>
+              <tr>
+                <td>Thermostat temperature:</td>
+                <td>)" + float_to_string(Thermostat::temperature) + R"(</td>
+              </tr>
+              <tr>
+                <td>Sensor temperature:</td>
+                <td>)" + float_to_string(
+                    TemperatureSensor::temperature) + R"(</td>
+              </tr>
+              <tr>
+                <td>Thermostat enabled:</td>
+                <td>)" + bool_to_string(Thermostat::enabled) + R"(</td>
+              </tr>
+              <tr>
+                <td>Heat on:</td>
+                <td>)" + bool_to_string(Thermostat::heat_on) + R"(</td>
+              </tr>
+            </table>
+          </body>
+        </html>)"));
   }
 
   void submit() {
-    if (server.hasArg("thermostat_temperature")) {
-      Thermostat::temperature = server.arg("thermostat_temperature").toFloat();
-    }
+    String response;
 
-    if (server.hasArg("enabled")) {
-      Thermostat::enabled = server.arg("enabled").toInt();
-    }
+    for (int check_set_i = 0; check_set_i < 2; check_set_i++) {
+      for (int args_i = 0; args_i < server.args(); args_i++) {
+        String line;
+        String arg_name = server.argName(args_i);
+        String arg_value = server.arg(args_i);
 
-    Thermostat::update();
-    server.send(200, "text/plain", "Submitted.");
+        if (check_set_i == 0) {
+          if (arg_name.equals("thermostat_temperature")) {
+            float arg_value_float = arg_value.toFloat();
+
+            if (arg_value_float < THERMOSTAT_MIN or
+                arg_value_float > THERMOSTAT_MAX) {
+              line = String(
+                  "must be between " + String(THERMOSTAT_MIN) + " and " +
+                  String(THERMOSTAT_MAX) + " (given " + String(arg_value) +
+                  ")");
+            }
+          } else if (arg_name.equals("enabled")) {
+            if (! arg_value.equals("true") and ! arg_value.equals("false")) {
+              line = String(
+                  "must be either \"true\" or \"false\", not " + arg_value);
+            }
+          } else {
+            line = String("invalid argument");
+          }
+
+          if (line.length()) {
+            line = String(arg_name + ": " + line);
+          }
+        } else {
+          if (arg_name.equals("thermostat_temperature")) {
+            Thermostat::temperature = arg_value.toFloat();
+            line = String(
+                "Thermostat temperature set to " +
+                float_to_string(Thermostat::temperature) + " C");
+          } else if (arg_name.equals("enabled")) {
+            Thermostat::enabled = server.arg("enabled").equals("true");
+
+            line = String(
+                "Thermostat " +
+                String(Thermostat::enabled ? "enabled" : "disabled"));
+          }
+        }
+
+        if (line.length()) {
+          if (response.length()) {
+            response += "\n";
+          }
+          response += String(line + ".");
+        }
+      }
+
+      if (check_set_i == 0) {
+        if (response.length()) {
+          server.send(400, "text/plain", response);
+          return;
+        }
+      } else {
+        if (response.length()) {
+          Thermostat::update();
+          server.send(200, "text/plain", response);
+        } else {
+          server.send(400, "text/plain", "No arguments submitted.");
+        }
+      }
+    }
   }
 }
