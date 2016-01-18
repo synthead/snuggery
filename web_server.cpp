@@ -22,6 +22,10 @@ namespace WebServer {
     return String(bool_value ? "true" : "false");
   }
 
+  String bool_to_checked(float bool_value) {
+    return String(bool_value ? " checked" : "");
+  }
+
   void index() {
     server.send(200, "text/html", String(R"(
         <!DOCTYPE html>
@@ -32,22 +36,49 @@ namespace WebServer {
           <body>
             <table>
               <tr>
-                <td>Thermostat temperature:</td>
-                <td>)" + String(Thermostat::temperature) + R"(</td>
-              </tr>
-              <tr>
                 <td>Sensor temperature:</td>
                 <td>)" + String(TemperatureSensor::temperature) + R"(</td>
               </tr>
               <tr>
-                <td>Thermostat enabled:</td>
-                <td>)" + bool_to_string(Thermostat::enabled) + R"(</td>
+                <td>Heat on:</td>
+                <td>
+                  <input type="checkbox" disabled)" +
+                      bool_to_checked(Thermostat::heat_on) + R"(>
+                </td>
               </tr>
               <tr>
-                <td>Heat on:</td>
-                <td>)" + bool_to_string(Thermostat::heat_on) + R"(</td>
+                <td>Thermostat temperature:</td>
+                <td>
+                  <input id="thermostat_temperature"
+                      name="thermostat_temperature" type="number"
+                      step="0.1" value=")" + String(Thermostat::temperature) +
+                      R"(">
+                </td>
+              </tr>
+              <tr>
+                <td>Thermostat enabled:</td>
+                <td>
+                  <input id="enabled" name="enabled" type="checkbox")" +
+                      bool_to_checked(Thermostat::enabled) + R"(>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <button id="submit">Submit</button>
+                </td>
               </tr>
             </table>
+
+            <script>
+              document.getElementById("submit").onclick = function() {
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "/submit", true);
+                xhttp.send(
+                    "enabled=" + document.getElementById("enabled").checked +
+                    "&thermostat_temperature=" +
+                    document.getElementById("thermostat_temperature").value);
+              }
+            </script>
           </body>
         </html>)"));
   }
