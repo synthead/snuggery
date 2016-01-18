@@ -126,12 +126,13 @@ namespace WebServer {
           }
         } else {
           if (arg_name.equals("thermostat_temperature")) {
-            Thermostat::temperature = arg_value.toFloat();
+            Thermostat::set_temperature(arg_value.toFloat());
+
             line = String(
                 "Thermostat temperature set to " +
                 String(Thermostat::temperature) + " C");
           } else if (arg_name.equals("enabled")) {
-            Thermostat::enabled = server.arg("enabled").equals("true");
+            Thermostat::set_enabled(server.arg("enabled").equals("true"));
 
             line = String(
                 "Thermostat " +

@@ -2,6 +2,7 @@
 #include "web_server.h"
 #include "temperature_sensor.h"
 #include "thermostat.h"
+#include <EEPROM.h>
 #include <ESP8266WiFi.h>
 #include <DallasTemperature.h>
 #include <ArduinoOTA.h>
