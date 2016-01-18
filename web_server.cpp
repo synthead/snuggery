@@ -18,15 +18,6 @@ namespace WebServer {
     server.handleClient();
   }
 
-  String float_to_string(float float_value) {
-    char char_value[7];
-    sprintf(
-        char_value, "%d.%02d", (int)float_value,
-        (int)(float_value * 100) % 100);
-
-    return String(char_value);
-  }
-
   String bool_to_string(float bool_value) {
     return String(bool_value ? "true" : "false");
   }
@@ -42,12 +33,11 @@ namespace WebServer {
             <table>
               <tr>
                 <td>Thermostat temperature:</td>
-                <td>)" + float_to_string(Thermostat::temperature) + R"(</td>
+                <td>)" + String(Thermostat::temperature) + R"(</td>
               </tr>
               <tr>
                 <td>Sensor temperature:</td>
-                <td>)" + float_to_string(
-                    TemperatureSensor::temperature) + R"(</td>
+                <td>)" + String(TemperatureSensor::temperature) + R"(</td>
               </tr>
               <tr>
                 <td>Thermostat enabled:</td>
@@ -64,9 +54,8 @@ namespace WebServer {
 
   void json() {
     server.send(200, "application/json", String(R"(
-        {"thermostat_temperature": )" + float_to_string(
-            Thermostat::temperature) + R"(,
-         "sensor_temperature": )" + float_to_string(
+        {"thermostat_temperature": )" + String(Thermostat::temperature) + R"(,
+         "sensor_temperature": )" + String(
             TemperatureSensor::temperature) + R"(,
          "thermostat_enabled": )" + bool_to_string(Thermostat::enabled) + R"(,
          "heat_on": )" + bool_to_string(Thermostat::heat_on) + "}"));
@@ -109,7 +98,7 @@ namespace WebServer {
             Thermostat::temperature = arg_value.toFloat();
             line = String(
                 "Thermostat temperature set to " +
-                float_to_string(Thermostat::temperature) + " C");
+                String(Thermostat::temperature) + " C");
           } else if (arg_name.equals("enabled")) {
             Thermostat::enabled = server.arg("enabled").equals("true");
 
