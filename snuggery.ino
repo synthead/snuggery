@@ -2,13 +2,17 @@
 #include "web_server.h"
 #include "temperature_sensor.h"
 #include "thermostat.h"
-#include <EEPROM.h>
 #include <ESP8266WiFi.h>
-#include <DallasTemperature.h>
+#include <ESP8266mDNS.h>
+#include <WiFiUdp.h>
 #include <ArduinoOTA.h>
+#include <DallasTemperature.h>
+#include <EEPROM.h>
+#include <PID_v1.h>
  
 void setup() {
   WiFi.begin(WIFI_SETTINGS_ESSID, WIFI_SETTINGS_PASSWORD);
+  WiFi.waitForConnectResult();
   ArduinoOTA.begin();
 
   Thermostat::setup();
