@@ -10,6 +10,7 @@ namespace WebServer {
   void setup() {
     server.on("/", index);
     server.on("/submit", submit);
+    server.on("/json", json);
     server.begin();
   }
 
@@ -27,7 +28,7 @@ namespace WebServer {
   }
 
   String bool_to_string(float bool_value) {
-    return String(bool_value ? "True" : "False");
+    return String(bool_value ? "true" : "false");
   }
 
   void index() {
@@ -59,6 +60,16 @@ namespace WebServer {
             </table>
           </body>
         </html>)"));
+  }
+
+  void json() {
+    server.send(200, "application/json", String(R"(
+        {"thermostat_temperature": )" + float_to_string(
+            Thermostat::temperature) + R"(,
+         "sensor_temperature": )" + float_to_string(
+            TemperatureSensor::temperature) + R"(,
+         "thermostat_enabled": )" + bool_to_string(Thermostat::enabled) + R"(,
+         "heat_on": )" + bool_to_string(Thermostat::heat_on) + "}"));
   }
 
   void submit() {
