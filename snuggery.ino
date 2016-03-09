@@ -9,6 +9,7 @@
 #include <DallasTemperature.h>
 #include <EEPROM.h>
 #include <PID_v1.h>
+#include <PID_AutoTune_v0.h>
  
 void setup() {
   WiFi.begin(WIFI_SETTINGS_ESSID, WIFI_SETTINGS_PASSWORD);
@@ -25,4 +26,5 @@ void loop() {
 
   WebServer::handle_client();
   TemperatureSensor::update_occasionally();
+  Thermostat::update();
 }

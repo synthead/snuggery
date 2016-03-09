@@ -2,7 +2,7 @@
 #define TEMPERATURE_SENSOR_H
 
 namespace TemperatureSensor {
-  extern float temperature;
+  extern double temperature;
 
   void setup();
   void update();
