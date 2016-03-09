@@ -88,13 +88,6 @@ namespace Thermostat {
     }
   }
 
-  void start_autotune() {
-    pid_autotune.SetLookbackSec(settings.pid_autotune.lookback_minutes * 60);
-    pid_autotune.SetNoiseBand(settings.pid_autotune.noise_band);
-
-    autotune_running = true;
-  }
-
   void handle_enabled() {
     if (settings.enabled) {
       reset_window();
@@ -121,6 +114,13 @@ namespace Thermostat {
     window_end_millis = millis() + settings.pid.window_seconds * 1000;
     pid_output_sum = 0.0;
     pid_output_count = 0;
+  }
+
+  void start_autotune() {
+    pid_autotune.SetLookbackSec(settings.pid_autotune.lookback_minutes * 60);
+    pid_autotune.SetNoiseBand(settings.pid_autotune.noise_band);
+
+    autotune_running = true;
   }
 
   void cancel_autotune() {
